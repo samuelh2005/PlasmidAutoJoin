@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "plasmid_auto_join",
+	"version": "${version}",
+	"name": "Plasmid Auto Join",
+	"description": "A Plasmid addon that automatically spawns the player into a game space when they join a server.",
+	"authors": [
+		"Samuel Hulme"
+	],
+	"contact": {
+		"sources": "https://github.com/samuelh2005/plasmid-auto-join"
+	},
+	"license": "MIT",
+	"icon": "assets/plasmid_auto_join/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"me.samuelh2005.plasmid_auto_join.PlasmidAutoJoin"
+		]
+	},
+	"mixins": [
+		"plasmid_auto_join.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*",
+		"plasmid": "*"
+	}
+}
