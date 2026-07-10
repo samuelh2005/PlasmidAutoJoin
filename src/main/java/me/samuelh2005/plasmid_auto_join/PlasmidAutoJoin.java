@@ -50,7 +50,7 @@ public class PlasmidAutoJoin implements ModInitializer {
      * We need to use SERVER_STARTED instead of SERVER_STARTING because the GameSpaceManagerImpl is not guaranteed to be initialized yet during SERVER_STARTING.
      */
     private void onServerStarting(MinecraftServer server) {
-        Identifier id = Identifier.parse(this.config.gameConfig);
+        Identifier id = Identifier.parse(this.config.getGameConfig());
         ResourceKey<GameConfig<?>> key = ResourceKey.create(PlasmidRegistryKeys.GAME_CONFIG, id);
 
         var registry = server.registryAccess().lookupOrThrow(PlasmidRegistryKeys.GAME_CONFIG);
@@ -61,7 +61,7 @@ public class PlasmidAutoJoin implements ModInitializer {
                     "No GameConfig found for id '{}'. Check data/<namespace>/plasmid/games/<path>.json " +
                     "matches 'gameConfig' in config/plasmid_auto_join.json. The server will start, but every " +
                     "connecting player will be handled according to ifGameNotReady ({}).",
-                    id, this.config.ifGameNotReady
+                    id, this.config.getIfGameNotReady()
             );
             return;
         }
@@ -80,7 +80,7 @@ public class PlasmidAutoJoin implements ModInitializer {
             LOGGER.info("Game '{}' is open and ready in level '{}'.",
                     id, TARGET_LEVEL.dimension().identifier());
 
-            if (this.config.shutdownWhenGameCloses) {
+            if (this.config.isShutdownWhenGameCloses()) {
                 gameSpace.getLifecycle().addListeners(new GameLifecycle.Listeners() {
                     @Override
                     public void onClosed(GameSpace closedSpace, List<ServerPlayer> players, GameCloseReason reason) {
@@ -104,8 +104,8 @@ public class PlasmidAutoJoin implements ModInitializer {
         GameSpace gameSpace = ACTIVE_GAME_SPACE;
  
         if (gameSpace == null || gameSpace.isClosed()) {
-            if (this.config.ifGameNotReady == PlasmidAutoJoinConfig.FailureMode.KICK) {
-                player.connection.disconnect(Component.literal(this.config.notReadyMessage));
+            if (this.config.getIfGameNotReady() == PlasmidAutoJoinConfig.FailureMode.KICK) {
+                player.connection.disconnect(Component.literal(this.config.getNotReadyMessage()));
             }
             return;
         }
@@ -113,7 +113,7 @@ public class PlasmidAutoJoin implements ModInitializer {
         var result = GamePlayerJoiner.tryJoin(player, gameSpace, JoinIntent.PLAY);
         if (result.isError()) {
             player.connection.disconnect(
-                    Component.literal(this.config.rejectedFallbackMessage + " ").append(result.errorCopy())
+                    Component.literal(this.config.getRejectedFallbackMessage() + " ").append(result.errorCopy())
             );
         }
     }

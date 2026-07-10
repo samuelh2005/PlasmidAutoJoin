@@ -23,25 +23,25 @@ public final class PlasmidAutoJoinConfig {
     private static final String FILE_NAME = "plasmid_auto_join.json";
 
     /** e.g. "myminigame:skywars_small" - same id used with /game open. */
-    public String gameConfig = "example:example_game";
+    private final String gameConfig = "example:example_game";
 
     /**
      * What to do with a connecting player if the configured game space isn't open/ready yet.
      * KICK (recommended) disconnects with notReadyMessage; VANILLA_FALLBACK lets vanilla decide
      * where they spawn (testing only - defeats the point of this mod in production).
      */
-    public FailureMode ifGameNotReady = FailureMode.KICK;
+    private final FailureMode ifGameNotReady = FailureMode.KICK;
 
-    public String notReadyMessage = "This game is still starting up, please reconnect in a moment.";
+    private final String notReadyMessage = "This game is still starting up, please reconnect in a moment.";
 
-    public String rejectedFallbackMessage = "Could not join the game.";
+    private final String rejectedFallbackMessage = "Could not join the game.";
 
     /**
      * If true, halts the server once the game space closes (match end). Standard for a true
      * one-match-per-process ephemeral server - whatever spun this process up is expected to
      * replace it with a fresh one for the next match.
      */
-    public boolean shutdownWhenGameCloses = true;
+    private final boolean shutdownWhenGameCloses = true;
 
     public enum FailureMode {
         KICK,
@@ -78,5 +78,32 @@ public final class PlasmidAutoJoinConfig {
         } catch (IOException e) {
             logger.error("Failed to write default config", e);
         }
+    }
+
+    public String getGameConfig() {
+        // Check if an environment variable is set for the game config, which can override the config file.
+        // This is useful for ephemeral servers managed by a script or container, where you might want to specify the game config without a file.
+        String envGameConfig = System.getenv("PLASMID_AUTO_JOIN_GAME_CONFIG");
+        if (envGameConfig != null && !envGameConfig.isEmpty()) {
+            return envGameConfig;
+        }
+
+        return gameConfig;
+    }
+
+    public FailureMode getIfGameNotReady() {
+        return ifGameNotReady;
+    }
+
+    public String getNotReadyMessage() {
+        return notReadyMessage;
+    }
+
+    public String getRejectedFallbackMessage() {
+        return rejectedFallbackMessage;
+    }
+
+    public boolean isShutdownWhenGameCloses() {
+        return shutdownWhenGameCloses;
     }
 }
