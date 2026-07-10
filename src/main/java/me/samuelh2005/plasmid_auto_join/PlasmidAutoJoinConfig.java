@@ -16,7 +16,7 @@ import java.nio.file.Path;
  * config/plasmid_auto_join.json
  * <p>
  * The only thing an admin needs to touch: {@code gameConfig} is exactly the id you'd type into
- * {@code /game open <id>} - the path to your data pack's {@code data/<namespace>/games/<path>.json}.
+ * {@code /game open <id>} - the path to your data pack's {@code data/<namespace>/plasmid/games/<path>.json}.
  */
 public final class PlasmidAutoJoinConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
